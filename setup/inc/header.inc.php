@@ -9,8 +9,8 @@ if (($lang = Internationalization::getCurrentLanguage())
 <head>
     <title><?php echo $wizard['title']; ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="css/wizard.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/flags.css">
+    <link rel="stylesheet" href="css/wizard.css?9ae093d"/>
+    <link type="text/css" rel="stylesheet" href="<?php echo ROOT_PATH; ?>css/flags.css?9ae093d"/>
 </head>
 <body>
     <div id="wizard">
