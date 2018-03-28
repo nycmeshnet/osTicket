@@ -11,7 +11,7 @@ $BUTTONS = isset($BUTTONS) ? $BUTTONS : true;
         || !$cfg->isClientLoginRequired()) { ?>
         		<!-- jh start edit -->
             <!-- <a href="open.php" style="display:block" class="blue button"><?php ?>-->
-            <a href="<?php echo MESH_FORM_PATH; ?>" style="display:block" class="blue button"><?php
+            <a href="<?php echo MESH_FORM_PATH; ?>" target="_blank" style="display:block" class="blue button"><?php
                 echo __('Open a New Ticket');?></a>
             <!-- jh end edit -->
 </p>

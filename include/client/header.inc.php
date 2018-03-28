@@ -143,7 +143,7 @@ if (($all_langs = Internationalization::getConfiguredSystemLanguages())
 	                echo sprintf('<li><a class="%s %s" href="%s">%s</a></li>%s',$nav['active']?'active':'',$name,(ROOT_PATH.$nav['href']),$nav['desc'],"\n"); 
 	                */
 	                if($nav['desc'] == 'Open a New Ticket'){ //change url only if "open" button
-                    echo sprintf('<li><a class="%s %s" href="%s">%s</a></li>%s',$nav['active']?'active':'',$name,(MESH_FORM_PATH),$nav['desc'],"\n");
+                    echo sprintf('<li><a class="%s %s"  target="_blank" href="%s">%s</a></li>%s',$nav['active']?'active':'',$name,(MESH_FORM_PATH),$nav['desc'],"\n");
                   } else {
 	                 	echo sprintf('<li><a class="%s %s" href="%s">%s</a></li>%s',$nav['active']?'active':'',$name,(ROOT_PATH.$nav['href']),$nav['desc'],"\n"); 
                   }
