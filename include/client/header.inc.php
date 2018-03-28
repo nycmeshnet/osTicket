@@ -1,6 +1,5 @@
-<?php
-	
-define('MESH_FORM_PATH', 'https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform');
+<?php	
+define('MESH_FORM_PATH', 'https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform'); //jh
 
 $title=($cfg && is_object($cfg) && $cfg->getTitle())
     ? $cfg->getTitle() : 'osTicket :: '.__('Support Ticket System');
@@ -139,12 +138,16 @@ if (($all_langs = Internationalization::getConfiguredSystemLanguages())
             <?php
             if($nav && ($navs=$nav->getNavLinks()) && is_array($navs)){
                 foreach($navs as $name =>$nav) {
-	                //jh change open button path
-	                if($nav['desc'] == 'Open a New Ticket'){
+	                //jh start edit
+	                /*
+	                echo sprintf('<li><a class="%s %s" href="%s">%s</a></li>%s',$nav['active']?'active':'',$name,(ROOT_PATH.$nav['href']),$nav['desc'],"\n"); 
+	                */
+	                if($nav['desc'] == 'Open a New Ticket'){ //change url only if "open" button
                     echo sprintf('<li><a class="%s %s" href="%s">%s</a></li>%s',$nav['active']?'active':'',$name,(MESH_FORM_PATH),$nav['desc'],"\n");
                   } else {
 	                 	echo sprintf('<li><a class="%s %s" href="%s">%s</a></li>%s',$nav['active']?'active':'',$name,(ROOT_PATH.$nav['href']),$nav['desc'],"\n"); 
                   }
+                  //jh end edit
                 }
             } ?>
         </ul>
