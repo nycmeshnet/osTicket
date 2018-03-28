@@ -55,7 +55,6 @@ if ($cfg->getClientRegistrationMode() != 'disabled'
     || !$cfg->isClientLoginRequired()) {
     echo sprintf(
     __("If this is your first time contacting us or you've lost the ticket number, please %s open a new ticket %s"),
-       // '<a href="open.php">','</a>'); jh
-        '<a href="https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform">','</a>');
+        '<a href="open.php">','</a>');
 } ?>
 </p>

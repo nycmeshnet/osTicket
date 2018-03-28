@@ -437,8 +437,7 @@ $nav->addSubMenu(array('desc' => __('Closed'),
 if ($thisstaff->hasPerm(TicketModel::PERM_CREATE, false)) {
     $nav->addSubMenu(array('desc'=>__('New Ticket'),
                            'title'=> __('Open a New Ticket'),
-                           //'href'=>'tickets.php?a=open', jh
-                           'href'=>'https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform',
+                           'href'=>'tickets.php?a=open',
                            'iconclass'=>'newTicket',
                            'id' => 'new-ticket'),
                         ($_REQUEST['a']=='open'));
