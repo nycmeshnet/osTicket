@@ -1,4 +1,6 @@
 <?php
+define('MESH_FORM_PATH', 'https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform'); //jh
+
 if(!defined('OSTCLIENTINC')) die('Access Denied');
 
 $email=Format::input($_POST['luser']?:$_GET['e']);
@@ -66,7 +68,15 @@ if ($cfg && $cfg->isClientRegistrationEnabled()) {
 <?php
 if ($cfg->getClientRegistrationMode() != 'disabled'
     || !$cfg->isClientLoginRequired()) {
-    echo sprintf(__('If this is your first time contacting us or you\'ve lost the ticket number, please %s open a new ticket %s'),
-        '<a href="open.php">', '</a>');
+    //jh start edit
+    /*
+    echo sprintf(
+    __("If this is your first time contacting us or you've lost the ticket number, please %s open a new ticket %s"),
+        '<a href="open.php">','</a>');
+    */
+    echo sprintf(
+    __("If this is your first time contacting us or you've lost the ticket number, please %s open a new ticket %s"),
+        '<a href="'.echo MESH_FORM_PATH.'">','</a>');
+    //jh end edit
 } ?>
 </p>
