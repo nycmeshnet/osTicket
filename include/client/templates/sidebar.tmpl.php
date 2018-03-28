@@ -8,7 +8,7 @@ $BUTTONS = isset($BUTTONS) ? $BUTTONS : true;
 <?php
     if ($cfg->getClientRegistrationMode() != 'disabled'
         || !$cfg->isClientLoginRequired()) { ?>
-            <a href="open.php" style="display:block" class="blue button"><?php
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform" style="display:block" class="blue button"><?php
                 echo __('Open a New Ticket');?></a>
 </p>
 <?php } ?>
