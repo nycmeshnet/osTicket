@@ -1,5 +1,4 @@
 <?php
-define('MESH_FORM_PATH', 'https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform'); //jh
 $BUTTONS = isset($BUTTONS) ? $BUTTONS : true;
 ?>
     <div class="sidebar pull-right">
@@ -11,7 +10,7 @@ $BUTTONS = isset($BUTTONS) ? $BUTTONS : true;
         || !$cfg->isClientLoginRequired()) { ?>
         		<!-- jh start edit -->
             <!--<a href="open.php" style="display:block" class="blue button"><?php -->
-            <a href="MESH_FORM_PATH" style="display:block" class="blue button"><?php
+            <a href="<?php echo MESH_FORM_PATH; ?>" style="display:block" class="blue button"><?php
                 echo __('Open a New Ticket');?></a>
         		<!-- jh end edit -->
 </p>
