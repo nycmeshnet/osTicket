@@ -157,7 +157,8 @@ class StaffNav {
                         if ($staff->hasPerm(TicketModel::PERM_CREATE, false))
                             $subnav[]=array('desc'=>__('New Ticket'),
                                             'title' => __('Open a New Ticket'),
-                                            'href'=>'tickets.php?a=open',
+                                            //'href'=>'tickets.php?a=open', jh
+                                            'href'=>'https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewformn',
                                             'iconclass'=>'newTicket',
                                             'id' => 'new-ticket',
                                             'droponly'=>true);
@@ -341,7 +342,8 @@ class UserNav {
             // possible for web clients.
             if ($cfg->getClientRegistrationMode() != 'disabled'
                     || !$cfg->isClientLoginRequired())
-                $navs['new']=array('desc'=>__('Open a New Ticket'),'href'=>'open.php','title'=>'');
+                //$navs['new']=array('desc'=>__('Open a New Ticket'),'href'=>'open.php','title'=>''); jh
+                $navs['new']=array('desc'=>__('Open a New Ticket'),'href'=>'https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform','title'=>'');
             if($user && $user->isValid()) {
                 if(!$user->isGuest()) {
                     $navs['tickets']=array('desc'=>sprintf(__('Tickets (%d)'),$user->getNumTickets($user->canSeeOrgTickets())),
