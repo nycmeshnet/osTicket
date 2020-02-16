@@ -15,6 +15,9 @@ class DynamicFormsAjaxAPI extends AjaxController {
     }
 
     function getFormsForHelpTopic($topic_id, $client=false) {
+        if (!$_SERVER['HTTP_REFERER'])
+            Http::response(403, 'Forbidden.');
+
         if (!($topic = Topic::lookup($topic_id)))
             Http::response(404, 'No such help topic');
 
@@ -29,7 +32,9 @@ class DynamicFormsAjaxAPI extends AjaxController {
             if (!$form->hasAnyVisibleFields())
                 continue;
             ob_start();
-            $form->getForm($_SESSION[':form-data'])->render(!$client);
+            $form->getForm($_SESSION[':form-data'])->render(array(
+                'staff' => !$client,
+                'mode' => 'create'));
             $html .= ob_get_clean();
             ob_start();
             print $form->getMedia();
@@ -146,6 +151,8 @@ class DynamicFormsAjaxAPI extends AjaxController {
     function saveListItem($list_id, $item_id) {
         global $thisstaff;
 
+        $errors = array();
+
         if (!$thisstaff)
             Http::response(403, 'Login required');
 
@@ -174,7 +181,7 @@ class DynamicFormsAjaxAPI extends AjaxController {
                     'name' =>   $basic['name'],
                     'value' =>  $basic['value'],
                     'abbrev' =>  $basic['extra'],
-                ]);
+                ], $errors);
             }
         }
 
@@ -381,9 +388,15 @@ class DynamicFormsAjaxAPI extends AjaxController {
     }
 
     function attach() {
+        global $thisstaff;
+
+        $config = DynamicFormField::objects()
+            ->filter(array('type__contains'=>'thread'))
+            ->first()->getConfiguration();
         $field = new FileUploadField();
+        $field->_config = $config;
         return JsonDataEncoder::encode(
-            array('id'=>$field->ajaxUpload())
+            array('id'=>$field->ajaxUpload($thisstaff ? true : false))
         );
     }
 
