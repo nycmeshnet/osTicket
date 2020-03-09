@@ -183,9 +183,10 @@ class ApiController {
     function requireApiKey() {
         # Validate the API key -- required to be sent via the X-API-Key
         # header
-				
+
         if(!($key=$this->getApiKey()))
             return $this->exerr(401, __('Valid API key required'));
+
         elseif (!$key->isActive()) {
             return $this->exerr(401, __('API key not found/active or source IP/hostname not authorized'));
         } else {
@@ -208,6 +209,7 @@ class ApiController {
             if (!preg_match($match_addr,$remote_ip_or_hostname))
                 return $this->exerr(401, __('API key not found/active or source IP/hostname not authorized'));
         }
+
         return $key;
     }
 
@@ -411,7 +413,7 @@ class ApiXmlDataParser extends XmlDataParser {
 
 include_once "class.json.php";
 class ApiJsonDataParser extends JsonDataParser {
-    function parse($stream) {
+    function parse($stream, $tidy=false) {
         return $this->fixup(parent::parse($stream));
     }
     function fixup($current) {

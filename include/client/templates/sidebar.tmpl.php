@@ -1,5 +1,4 @@
 <?php
-define('MESH_FORM_PATH', 'https://docs.google.com/forms/d/e/1FAIpQLSfoLYGhTJEEevdr1ViJo0YZeyoDs0vkFumB6yO1lxdqEy6h1w/viewform'); //jh
 $BUTTONS = isset($BUTTONS) ? $BUTTONS : true;
 ?>
     <div class="sidebar pull-right">
@@ -9,11 +8,8 @@ $BUTTONS = isset($BUTTONS) ? $BUTTONS : true;
 <?php
     if ($cfg->getClientRegistrationMode() != 'disabled'
         || !$cfg->isClientLoginRequired()) { ?>
-        		<!-- jh start edit -->
-            <!-- <a href="open.php" style="display:block" class="blue button"><?php ?>-->
-            <a href="<?php echo MESH_FORM_PATH; ?>" target="_blank" style="display:block" class="blue button"><?php
+            <a href="open.php" style="display:block" class="blue button"><?php
                 echo __('Open a New Ticket');?></a>
-            <!-- jh end edit -->
 </p>
 <?php } ?>
 <p>
@@ -23,8 +19,9 @@ $BUTTONS = isset($BUTTONS) ? $BUTTONS : true;
         </div>
 <?php } ?>
         <div class="content"><?php
-    $faqs = FAQ::getFeatured()->select_related('category')->limit(5);
-    if ($faqs->all()) { ?>
+    if ($cfg->isKnowledgebaseEnabled()
+        && ($faqs = FAQ::getFeatured()->select_related('category')->limit(5))
+        && $faqs->all()) { ?>
             <section><div class="header"><?php echo __('Featured Questions'); ?></div>
 <?php   foreach ($faqs as $F) { ?>
             <div><a href="<?php echo ROOT_PATH; ?>kb/faq.php?id=<?php

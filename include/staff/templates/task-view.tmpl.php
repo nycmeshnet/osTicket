@@ -1,7 +1,7 @@
 <?php
 if (!defined('OSTSCPINC')
     || !$thisstaff || !$task
-    || !($role = $thisstaff->getRole($task->getDeptId())))
+    || !($role = $thisstaff->getRole($task->getDept())))
     die('Invalid path');
 
 global $cfg;
@@ -13,6 +13,7 @@ $thread = $task->getThread();
 $iscloseable = $task->isCloseable();
 $canClose = ($role->hasPerm(TaskModel::PERM_CLOSE) && $iscloseable === true);
 $actions = array();
+$object = $task->ticket;
 
 if ($task->isOpen() && $role->hasPerm(Task::PERM_ASSIGN)) {
 
@@ -78,13 +79,15 @@ if ($role->hasPerm(Task::PERM_DELETE)) {
             'delete' => array(
                 'href' => sprintf('#tasks/%d/delete', $task->getId()),
                 'icon' => 'icon-trash',
-                'class' => 'red button',
+                'class' => (strpos($_SERVER['REQUEST_URI'], 'tickets.php') !== false) ? 'danger' : 'red button',
                 'label' => __('Delete'),
                 'redirect' => 'tasks.php'
             ));
 }
 
 $info=($_POST && $errors)?Format::input($_POST):array();
+$type = array('type' => 'viewed');
+Signal::send('object.view', $task, $type);
 
 if ($task->isOverdue())
     $warn.='&nbsp;&nbsp;<span class="Icon overdueTicket">'.__('Marked overdue!').'</span>';
@@ -119,9 +122,17 @@ if ($task->isOverdue())
                     href="tasks.php?id=<?php echo $task->getId(); ?>"><i
                     class="icon-refresh"></i>&nbsp;<?php
                     echo sprintf(__('Task #%s'), $task->getNumber()); ?></a>
+                <?php if ($object) { ?>
+                    &nbsp;/&nbsp;
+                    <a class="preview"
+                      href="tickets.php?id=<?php echo $object->getId(); ?>"
+                      data-preview="#tickets/<?php echo $object->getId(); ?>/preview"
+                      ><?php echo sprintf(__('Ticket #%s'), $object->getNumber()); ?></a>
+                <?php } ?>
                 </h2>
             <?php
-            } ?>
+            }
+            ?>
         </div>
         <div class="flush-right">
             <?php
@@ -146,7 +157,7 @@ if ($task->isOverdue())
                 <ul>
 
                     <?php
-                    if ($task->isOpen()) { ?>
+                    if (!$task->isOpen()) { ?>
                     <li>
                         <a class="no-pjax task-action"
                             href="#tasks/<?php echo $task->getId(); ?>/reopen"><i
@@ -154,7 +165,7 @@ if ($task->isOverdue())
                             echo __('Reopen');?> </a>
                     </li>
                     <?php
-                    } else {
+                    } elseif ($canClose) {
                     ?>
                     <li>
                         <a class="no-pjax task-action"
@@ -212,7 +223,7 @@ if ($task->isOverdue())
                                 echo __('Reopen');?> </a>
                         </li>
                         <?php
-                        } else {
+                        } elseif ($canClose) {
                         ?>
                         <li>
                             <a class="no-pjax task-action"
@@ -268,7 +279,7 @@ if ($task->isOverdue())
                 <?php
                 foreach ($actions as $action) {?>
                 <span class="action-button <?php echo $action['class'] ?: ''; ?>">
-                    <a class="task-action"
+                    <a class="<?php echo ($action['class'] == 'no-pjax') ? '' : 'task-action'; ?>"
                         <?php
                         if ($action['dialog'])
                             echo sprintf("data-dialog-config='%s'", $action['dialog']);
@@ -372,13 +383,13 @@ if (!$ticket) { ?>
                         <th><?php echo __('Collaborators');?>:</th>
                         <td>
                             <?php
-                            $collaborators = __('Add Participants');
+                            $collaborators = __('Collaborators');
                             if ($task->getThread()->getNumCollaborators())
-                                $collaborators = sprintf(__('Participants (%d)'),
+                                $collaborators = sprintf(__('Collaborators (%d)'),
                                         $task->getThread()->getNumCollaborators());
 
                             echo sprintf('<span><a class="collaborators preview"
-                                    href="#thread/%d/collaborators"><span
+                                    href="#thread/%d/collaborators/1"><span
                                     id="t%d-collaborators">%s</span></a></span>',
                                     $task->getThreadId(),
                                     $task->getThreadId(),
@@ -486,15 +497,15 @@ else
                         style="display:<?php echo $thread->getNumCollaborators() ? 'inline-block': 'none'; ?>;"
                         >
                     <?php
-                    $recipients = __('Add Participants');
                     if ($thread->getNumCollaborators())
-                        $recipients = sprintf(__('Recipients (%d of %d)'),
+                        $recipients = sprintf(__('(%d of %d)'),
                                 $thread->getNumActiveCollaborators(),
                                 $thread->getNumCollaborators());
 
                     echo sprintf('<span><a class="collaborators preview"
-                            href="#thread/%d/collaborators"><span id="t%d-recipients">%s</span></a></span>',
+                            href="#thread/%d/collaborators/1"> %s &nbsp;<span id="t%d-recipients">%s</span></a></span>',
                             $thread->getId(),
+                            __('Collaborators'),
                             $thread->getId(),
                             $recipients);
                    ?>
@@ -513,7 +524,7 @@ else
                         placeholder="<?php echo __( 'Start writing your update here.'); ?>"
                         rows="9" wrap="soft"
                         class="<?php if ($cfg->isRichTextEnabled()) echo 'richtext';
-                            ?> draft draft-delete" <?php
+                            ?> draft draft-delete fullscreen" <?php
     list($draft, $attrs) = Draft::getDraftAndDataAttrs('task.response', $task->getId(), $info['task.response']);
     echo $attrs; ?>><?php echo $draft ?: $info['task.response'];
                     ?></textarea>
@@ -574,7 +585,7 @@ else
                         placeholder="<?php echo __('Internal Note details'); ?>"
                         rows="9" wrap="soft" data-draft-namespace="task.note"
                         data-draft-object-id="<?php echo $task->getId(); ?>"
-                        class="richtext ifhtml draft draft-delete"><?php
+                        class="richtext ifhtml draft draft-delete fullscreen"><?php
                         echo $info['note'];
                         ?></textarea>
                     <div class="attachments">
@@ -619,7 +630,6 @@ else
 <?php
 echo $reply_attachments_form->getMedia();
 ?>
-
 <script type="text/javascript">
 $(function() {
     $(document).off('.tasks-content');
@@ -665,7 +675,10 @@ $(function() {
                 .slideUp();
             }
         })
-        .done(function() { })
+        .done(function() {
+            $('#loading').hide();
+            $.toggleOverlay(false);
+        })
         .fail(function() { });
      });
     <?php
